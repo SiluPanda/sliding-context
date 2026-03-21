@@ -1,0 +1,1 @@
+{"version":3,"file":"summarization.js","sourceRoot":"","sources":["../src/summarization.ts"],"names":[],"mappings":";;AAYA,sCAWC;AArBD;;;;;;;;;GASG;AACI,KAAK,UAAU,aAAa,CACjC,QAAmB,EACnB,UAAsB,EACtB,eAAmC;IAEnC,IAAI,CAAC;QACH,MAAM,MAAM,GAAG,MAAM,UAAU,CAAC,QAAQ,EAAE,eAAe,CAAC,CAAC;QAC3D,OAAO,MAAM,CAAC;IAChB,CAAC;IAAC,MAAM,CAAC;QACP,OAAO,IAAI,CAAC;IACd,CAAC;AACH,CAAC"}
