@@ -6,38 +6,38 @@ Comprehensive task list derived from SPEC.md. All tasks must be completed before
 
 ## Phase 1: Project Setup and Scaffolding
 
-- [ ] **Install dev dependencies** — Add `typescript`, `vitest`, `eslint`, and `@types/node` as dev dependencies in `package.json`. Verify `npm install` succeeds cleanly. | Status: not_done
-- [ ] **Configure ESLint** — Create `.eslintrc` (or equivalent) with TypeScript support. Ensure `npm run lint` runs against `src/`. | Status: not_done
-- [ ] **Configure Vitest** — Create `vitest.config.ts` if needed. Ensure `npm run test` discovers and runs `src/__tests__/**/*.test.ts` files. | Status: not_done
-- [ ] **Create source file structure** — Create all source files as specified in Section 18: `src/index.ts`, `src/context.ts`, `src/types.ts`, `src/eviction.ts`, `src/summarization.ts`, `src/budget.ts`, `src/token-counter.ts`, `src/serialization.ts`, `src/prompt.ts`. Create empty test directory structure under `src/__tests__/`. | Status: not_done
-- [ ] **Create test fixtures directory** — Create `src/__tests__/fixtures/messages.ts` with reusable test message sequences (user/assistant exchanges, tool call pairs, system messages, multi-part messages). Create `src/__tests__/fixtures/mock-summarizer.ts` with mock summarizer implementations (one that works, one that fails, one that returns empty string). | Status: not_done
-- [ ] **Verify build pipeline** — Run `npm run build` and confirm `tsc` compiles successfully with the tsconfig.json settings (target ES2022, CommonJS, strict mode, declarations). | Status: not_done
+- [x] **Install dev dependencies** — Add `typescript`, `vitest`, `eslint`, and `@types/node` as dev dependencies in `package.json`. Verify `npm install` succeeds cleanly. | Status: done
+- [x] **Configure ESLint** — Create `.eslintrc` (or equivalent) with TypeScript support. Ensure `npm run lint` runs against `src/`. | Status: done
+- [x] **Configure Vitest** — Create `vitest.config.ts` if needed. Ensure `npm run test` discovers and runs `src/__tests__/**/*.test.ts` files. | Status: done
+- [x] **Create source file structure** — Create all source files as specified in Section 18: `src/index.ts`, `src/context.ts`, `src/types.ts`, `src/eviction.ts`, `src/summarization.ts`, `src/budget.ts`, `src/token-counter.ts`, `src/serialization.ts`, `src/prompt.ts`. Create empty test directory structure under `src/__tests__/`. | Status: done
+- [x] **Create test fixtures directory** — Create `src/__tests__/fixtures/messages.ts` with reusable test message sequences (user/assistant exchanges, tool call pairs, system messages, multi-part messages). Create `src/__tests__/fixtures/mock-summarizer.ts` with mock summarizer implementations (one that works, one that fails, one that returns empty string). | Status: done
+- [x] **Verify build pipeline** — Run `npm run build` and confirm `tsc` compiles successfully with the tsconfig.json settings (target ES2022, CommonJS, strict mode, declarations). | Status: done
 
 ---
 
 ## Phase 2: Type Definitions (`src/types.ts`)
 
-- [ ] **Define Message interface** — Define the `Message` interface with fields: `role` (`'system' | 'user' | 'assistant' | 'tool'`), `content` (string), optional `tool_calls` (ToolCall[]), optional `tool_call_id` (string), optional `name` (string). | Status: not_done
-- [ ] **Define ToolCall interface** — Define the `ToolCall` interface with fields: `id` (string), `type` (`'function'`), `function` (`{ name: string; arguments: string }`). | Status: not_done
-- [ ] **Define TokenCounter type** — Define `TokenCounter` as `(text: string) => number`. | Status: not_done
-- [ ] **Define Summarizer type** — Define `Summarizer` as `(messages: Message[], existingSummary?: string) => Promise<string>`. | Status: not_done
-- [ ] **Define SummarizationStrategy type** — Define as `'incremental' | 'rolling' | 'anchored'`. | Status: not_done
-- [ ] **Define SummaryRole type** — Define as `'system' | 'user'`. | Status: not_done
-- [ ] **Define EventHooks interface** — Define with optional callbacks: `onEvict(messages, reason)`, `onSummarize(inputMessages, existingSummary, newSummary, durationMs)`, `onBudgetExceeded(totalTokens, budget)`, `onSummaryCompressed(oldSummary, newSummary)`. | Status: not_done
-- [ ] **Define SlidingContextOptions interface** — Define with all configuration fields per Section 8: `tokenBudget` (required), `systemPrompt`, `summarizer`, `strategy`, `maxSummaryTokens`, `minRecentTokens`, `summarizeThresholdTokens`, `summarizeThresholdMessages`, `tokenCounter`, `messageOverhead`, `summaryRole`, `maxSummaryRounds`, `anchor`, `maxAnchorTokens`, `hooks`. | Status: not_done
-- [ ] **Define ContextState interface** — Define the serializable state representation per Section 8: `options` (non-function config), `messages`, `summary`, `anchor`, `pendingBuffer`, `summaryRounds`, `tokenCounts`, `version` (literal `1`). | Status: not_done
-- [ ] **Define SlidingContext interface** — Define the public instance interface with methods: `addMessage()`, `getMessages()`, `getSummary()`, `getTokenCount()`, `getTokenBreakdown()`, `getRecentMessageCount()`, `getTotalMessageCount()`, `setAnchor()`, `setTokenBudget()`, `clear()`, `serialize()`. | Status: not_done
+- [x] **Define Message interface** — Define the `Message` interface with fields: `role` (`'system' | 'user' | 'assistant' | 'tool'`), `content` (string), optional `tool_calls` (ToolCall[]), optional `tool_call_id` (string), optional `name` (string). | Status: done
+- [x] **Define ToolCall interface** — Define the `ToolCall` interface with fields: `id` (string), `type` (`'function'`), `function` (`{ name: string; arguments: string }`). | Status: done
+- [x] **Define TokenCounter type** — Define `TokenCounter` as `(text: string) => number`. | Status: done
+- [x] **Define Summarizer type** — Define `Summarizer` as `(messages: Message[], existingSummary?: string) => Promise<string>`. | Status: done
+- [x] **Define SummarizationStrategy type** — Define as `'incremental' | 'rolling' | 'anchored'`. | Status: done
+- [x] **Define SummaryRole type** — Define as `'system' | 'user'`. | Status: done
+- [x] **Define EventHooks interface** — Define with optional callbacks: `onEvict(messages, reason)`, `onSummarize(inputMessages, existingSummary, newSummary, durationMs)`, `onBudgetExceeded(totalTokens, budget)`, `onSummaryCompressed(oldSummary, newSummary)`. | Status: done
+- [x] **Define SlidingContextOptions interface** — Define with all configuration fields per Section 8: `tokenBudget` (required), `systemPrompt`, `summarizer`, `strategy`, `maxSummaryTokens`, `minRecentTokens`, `summarizeThresholdTokens`, `summarizeThresholdMessages`, `tokenCounter`, `messageOverhead`, `summaryRole`, `maxSummaryRounds`, `anchor`, `maxAnchorTokens`, `hooks`. | Status: done
+- [x] **Define ContextState interface** — Define the serializable state representation per Section 8: `options` (non-function config), `messages`, `summary`, `anchor`, `pendingBuffer`, `summaryRounds`, `tokenCounts`, `version` (literal `1`). | Status: done
+- [x] **Define SlidingContext interface** — Define the public instance interface with methods: `addMessage()`, `getMessages()`, `getSummary()`, `getTokenCount()`, `getTokenBreakdown()`, `getRecentMessageCount()`, `getTotalMessageCount()`, `setAnchor()`, `setTokenBudget()`, `clear()`, `serialize()`. | Status: done
 
 ---
 
 ## Phase 3: Token Counting (`src/token-counter.ts`)
 
-- [ ] **Implement approximate token counter** — Implement the default counter: `Math.ceil(text.length / 4)`. Export as `approximateTokenCounter`. Handle empty strings (return 0). | Status: not_done
-- [ ] **Implement per-message token counting** — Create a `countMessageTokens(message, tokenCounter, messageOverhead)` function. For string content: `tokenCounter(content) + messageOverhead`. For messages with `tool_calls`: add `tokenCounter(JSON.stringify(tool_calls))`. For tool messages: include `tool_call_id` in overhead. For empty/missing content: return `messageOverhead` plus tool call overhead. | Status: not_done
-- [ ] **Handle multi-part message content** — If `content` is an array, sum token counts of text parts via `tokenCounter`, and add a flat `imageTokenCost` (default 85) per non-text part. | Status: not_done
-- [ ] **Tests: approximate token counter** — Create `src/__tests__/token-counting/approximate.test.ts`. Test with: empty string, single character, English prose, code, JSON, very long strings. Verify the formula `Math.ceil(text.length / 4)` holds for all cases. | Status: not_done
-- [ ] **Tests: pluggable token counter** — Create `src/__tests__/token-counting/pluggable.test.ts`. Test that a custom `tokenCounter` function is called instead of the default. Use a mock counter that returns predetermined values and verify correct results. | Status: not_done
-- [ ] **Tests: message overhead calculation** — Create `src/__tests__/token-counting/message-overhead.test.ts`. Test per-message overhead is added correctly. Test tool call overhead. Test messages with empty content. Test messages with only `tool_calls` and no content. | Status: not_done
+- [x] **Implement approximate token counter** — Implement the default counter: `Math.ceil(text.length / 4)`. Export as `approximateTokenCounter`. Handle empty strings (return 0). | Status: done
+- [x] **Implement per-message token counting** — Create a `countMessageTokens(message, tokenCounter, messageOverhead)` function. For string content: `tokenCounter(content) + messageOverhead`. For messages with `tool_calls`: add `tokenCounter(JSON.stringify(tool_calls))`. For tool messages: include `tool_call_id` in overhead. For empty/missing content: return `messageOverhead` plus tool call overhead. | Status: done
+- [x] **Handle multi-part message content** — If `content` is an array, sum token counts of text parts via `tokenCounter`, and add a flat `imageTokenCost` (default 85) per non-text part. | Status: done
+- [x] **Tests: approximate token counter** — Create `src/__tests__/token-counting/approximate.test.ts`. Test with: empty string, single character, English prose, code, JSON, very long strings. Verify the formula `Math.ceil(text.length / 4)` holds for all cases. | Status: done
+- [x] **Tests: pluggable token counter** — Create `src/__tests__/token-counting/pluggable.test.ts`. Test that a custom `tokenCounter` function is called instead of the default. Use a mock counter that returns predetermined values and verify correct results. | Status: done
+- [x] **Tests: message overhead calculation** — Create `src/__tests__/token-counting/message-overhead.test.ts`. Test per-message overhead is added correctly. Test tool call overhead. Test messages with empty content. Test messages with only `tool_calls` and no content. | Status: done
 
 ---
 
