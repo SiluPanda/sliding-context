@@ -43,7 +43,7 @@ Comprehensive task list derived from SPEC.md. All tasks must be completed before
 
 ## Phase 4: Default Summarization Prompt (`src/prompt.ts`)
 
-- [ ] **Export defaultSummarizationPrompt** — Create `src/prompt.ts` and export the `defaultSummarizationPrompt` string constant as specified in Section 6 (preserve key facts, named entities, user preferences, action items, unresolved questions; omit pleasantries, repeated information, debugging, verbose tool output). | Status: not_done
+- [x] **Export defaultSummarizationPrompt** — Create `src/prompt.ts` and export the `defaultSummarizationPrompt` string constant as specified in Section 6 (preserve key facts, named entities, user preferences, action items, unresolved questions; omit pleasantries, repeated information, debugging, verbose tool output). | Status: done
 
 ---
 
@@ -58,42 +58,42 @@ Comprehensive task list derived from SPEC.md. All tasks must be completed before
 - [ ] **Validate summaryRole** — Must be `'system'` or `'user'`. Throw `TypeError` for invalid values. | Status: not_done
 - [ ] **Validate maxSummaryRounds** — Must be a positive integer. Throw `TypeError` for zero or negative values. | Status: not_done
 - [ ] **Validate anchor token count** — If `strategy` is `'anchored'` and `anchor` is provided, its token count must not exceed `maxAnchorTokens`. Throw `RangeError` with descriptive message when violated. | Status: not_done
-- [ ] **Apply default values** — For all optional fields, apply defaults per Section 13: `strategy` defaults to `'incremental'`, `maxSummaryTokens` to `Math.floor(tokenBudget * 0.3)`, `minRecentTokens` to `Math.floor(tokenBudget * 0.3)`, `summarizeThresholdTokens` to `Math.floor(tokenBudget * 0.1)`, `summarizeThresholdMessages` to `6`, `tokenCounter` to the approximate counter, `messageOverhead` to `4`, `summaryRole` to `'system'`, `maxSummaryRounds` to `5`, `maxAnchorTokens` to `Math.floor(maxSummaryTokens * 0.4)`. | Status: not_done
+- [x] **Apply default values** — For all optional fields, apply defaults per Section 13: `strategy` defaults to `'incremental'`, `maxSummaryTokens` to `Math.floor(tokenBudget * 0.3)`, `minRecentTokens` to `Math.floor(tokenBudget * 0.3)`, `summarizeThresholdTokens` to `Math.floor(tokenBudget * 0.1)`, `summarizeThresholdMessages` to `6`, `tokenCounter` to the approximate counter, `messageOverhead` to `4`, `summaryRole` to `'system'`, `maxSummaryRounds` to `5`, `maxAnchorTokens` to `Math.floor(maxSummaryTokens * 0.4)`. | Status: done
 
 ---
 
 ## Phase 6: Core Context Management (`src/context.ts`)
 
-- [ ] **Implement createContext factory function** — Accept `SlidingContextOptions`, validate config, compute defaults, initialize internal state (message array, token counts, empty summary, empty pending buffer), return a `SlidingContext` object. | Status: not_done
-- [ ] **Implement addMessage()** — Append message to internal store. Compute and cache token count for the message. Update zone token counts. Check if total exceeds `tokenBudget` and trigger eviction if needed. Must be synchronous (no async). | Status: not_done
-- [ ] **Implement getMessages() — basic assembly** — Return message array in order: [system prompt (if present), summary message (if summary exists), ...recent messages]. The summary message should use the configured `summaryRole`. This method is async because it may trigger summarization. | Status: not_done
-- [ ] **Implement getSummary()** — Return the current summary string or `null` if no summarization has occurred. | Status: not_done
-- [ ] **Implement getTokenCount()** — Return the cached total token count across all zones. Must be O(1). | Status: not_done
-- [ ] **Implement getTokenBreakdown()** — Return an object with `{ system, summary, recent, pending, total }` token counts. Must be O(1) using cached values. | Status: not_done
-- [ ] **Implement getRecentMessageCount()** — Return the number of messages currently in the recent zone. | Status: not_done
-- [ ] **Implement getTotalMessageCount()** — Return the total number of messages ever added to the conversation (including evicted/summarized ones). | Status: not_done
-- [ ] **Implement clear()** — Reset all messages, summary, pending buffer, and token counts to initial state. Preserve system prompt and configuration. | Status: not_done
-- [ ] **System prompt handling** — Never summarize or evict the system prompt. Always place it as the first element in `getMessages()`. Its token cost is fixed and subtracted from the budget. If no system prompt is provided, omit it from the output. | Status: not_done
-- [ ] **Additional system messages** — System messages added via `addMessage()` (beyond the initial system prompt) are treated as regular messages: they enter the recent zone and can be evicted and summarized. | Status: not_done
+- [x] **Implement createContext factory function** — Accept `SlidingContextOptions`, validate config, compute defaults, initialize internal state (message array, token counts, empty summary, empty pending buffer), return a `SlidingContext` object. | Status: done
+- [x] **Implement addMessage()** — Append message to internal store. Compute and cache token count for the message. Update zone token counts. Check if total exceeds `tokenBudget` and trigger eviction if needed. Must be synchronous (no async). | Status: done
+- [x] **Implement getMessages() — basic assembly** — Return message array in order: [system prompt (if present), summary message (if summary exists), ...recent messages]. The summary message should use the configured `summaryRole`. This method is async because it may trigger summarization. | Status: done
+- [x] **Implement getSummary()** — Return the current summary string or `null` if no summarization has occurred. | Status: done
+- [x] **Implement getTokenCount()** — Return the cached total token count across all zones. Must be O(1). | Status: done
+- [x] **Implement getTokenBreakdown()** — Return an object with `{ system, summary, recent, pending, total }` token counts. Must be O(1) using cached values. | Status: done
+- [x] **Implement getRecentMessageCount()** — Return the number of messages currently in the recent zone. | Status: done
+- [x] **Implement getTotalMessageCount()** — Return the total number of messages ever added to the conversation (including evicted/summarized ones). | Status: done
+- [x] **Implement clear()** — Reset all messages, summary, pending buffer, and token counts to initial state. Preserve system prompt and configuration. | Status: done
+- [x] **System prompt handling** — Never summarize or evict the system prompt. Always place it as the first element in `getMessages()`. Its token cost is fixed and subtracted from the budget. If no system prompt is provided, omit it from the output. | Status: done
+- [x] **Additional system messages** — System messages added via `addMessage()` (beyond the initial system prompt) are treated as regular messages: they enter the recent zone and can be evicted and summarized. | Status: done
 
 ---
 
 ## Phase 7: Eviction Logic (`src/eviction.ts`)
 
-- [ ] **Implement oldest-first eviction** — When total tokens exceed `tokenBudget`, evict the oldest messages from the recent zone into the pending buffer. Continue evicting until total tokens are at or below the budget. | Status: not_done
-- [ ] **Implement tool call pair atomicity** — When evicting, detect assistant messages with `tool_calls`. Find all corresponding tool result messages (matched by `tool_call_id`). Evict the entire group (assistant message + all matching tool messages) as an atomic unit. Never split a tool call pair across the summary boundary. | Status: not_done
-- [ ] **Handle parallel tool calls** — An assistant message may have multiple `tool_calls`, each with its own tool result message. All tool results for a given assistant message must be evicted together with that assistant message. | Status: not_done
-- [ ] **Handle consecutive tool calls** — Multiple consecutive assistant-tool call pairs at the eviction boundary. Each pair is atomic independently, but consecutive pairs can be evicted separately. | Status: not_done
-- [ ] **Handle tool call without result** — If an assistant message with `tool_calls` has no corresponding tool result messages, it is evicted as a normal message (degenerate case per Section 14). | Status: not_done
-- [ ] **Tests: basic eviction** — Create `src/__tests__/eviction/basic-eviction.test.ts`. Test: messages evicted in oldest-first order; eviction stops when budget is satisfied; evicted messages appear in pending buffer; recently added messages remain in recent zone. | Status: not_done
-- [ ] **Tests: tool call pair atomicity** — Create `src/__tests__/eviction/tool-call-pairs.test.ts`. Test: single tool call pair evicted atomically; parallel tool calls (multi-tool_calls) evicted atomically; consecutive tool call pairs at boundary; tool call without result; tool call pair that spans multiple messages. | Status: not_done
-- [ ] **Tests: multi-part messages** — Create `src/__tests__/eviction/multi-part-messages.test.ts`. Test: multi-part messages are evicted like regular messages; token counting uses flat cost for non-text parts. | Status: not_done
+- [x] **Implement oldest-first eviction** — When total tokens exceed `tokenBudget`, evict the oldest messages from the recent zone into the pending buffer. Continue evicting until total tokens are at or below the budget. | Status: done
+- [x] **Implement tool call pair atomicity** — When evicting, detect assistant messages with `tool_calls`. Find all corresponding tool result messages (matched by `tool_call_id`). Evict the entire group (assistant message + all matching tool messages) as an atomic unit. Never split a tool call pair across the summary boundary. | Status: done
+- [x] **Handle parallel tool calls** — An assistant message may have multiple `tool_calls`, each with its own tool result message. All tool results for a given assistant message must be evicted together with that assistant message. | Status: done
+- [x] **Handle consecutive tool calls** — Multiple consecutive assistant-tool call pairs at the eviction boundary. Each pair is atomic independently, but consecutive pairs can be evicted separately. | Status: done
+- [x] **Handle tool call without result** — If an assistant message with `tool_calls` has no corresponding tool result messages, it is evicted as a normal message (degenerate case per Section 14). | Status: done
+- [x] **Tests: basic eviction** — Create `src/__tests__/eviction/basic-eviction.test.ts`. Test: messages evicted in oldest-first order; eviction stops when budget is satisfied; evicted messages appear in pending buffer; recently added messages remain in recent zone. | Status: done
+- [x] **Tests: tool call pair atomicity** — Create `src/__tests__/eviction/tool-call-pairs.test.ts`. Test: single tool call pair evicted atomically; parallel tool calls (multi-tool_calls) evicted atomically; consecutive tool call pairs at boundary; tool call without result; tool call pair that spans multiple messages. | Status: done
+- [x] **Tests: multi-part messages** — Create `src/__tests__/eviction/multi-part-messages.test.ts`. Test: multi-part messages are evicted like regular messages; token counting uses flat cost for non-text parts. | Status: done
 
 ---
 
 ## Phase 8: Budget Allocation (`src/budget.ts`)
 
-- [ ] **Implement zone allocation formula** — Compute `systemTokens` (fixed), `summaryTokens` (capped at `maxSummaryTokens`), `recentTokens` (remainder: `tokenBudget - systemTokens - summaryTokens`). Ensure `minRecentTokens` is guaranteed. | Status: not_done
+- [x] **Implement zone allocation formula** — Compute `systemTokens` (fixed), `summaryTokens` (capped at `maxSummaryTokens`), `recentTokens` (remainder: `tokenBudget - systemTokens - summaryTokens`). Ensure `minRecentTokens` is guaranteed. | Status: done
 - [ ] **Implement budget rebalancing — summary compression trigger** — When `summaryTokens > maxSummaryTokens`, trigger summary re-summarization targeting `maxSummaryTokens * 0.75`. | Status: not_done
 - [ ] **Implement budget rebalancing — forced eviction** — If total still exceeds budget after summary compression, evict more recent messages. | Status: not_done
 - [ ] **Implement budget rebalancing — emergency truncation** — If the summarizer fails or is unavailable and the pending buffer exceeds the budget, drop the oldest pending messages without summarization. Fire `onEvict` hook with `reason: 'truncation'`. | Status: not_done
@@ -105,16 +105,16 @@ Comprehensive task list derived from SPEC.md. All tasks must be completed before
 
 ## Phase 9: Summarization Orchestration (`src/summarization.ts`)
 
-- [ ] **Implement summarization trigger** — Check pending buffer against `summarizeThresholdTokens` and `summarizeThresholdMessages`. Trigger summarization when either threshold is exceeded (whichever is reached first). | Status: not_done
-- [ ] **Implement incremental strategy** — Pass only newly evicted messages and the existing summary to the summarizer: `summarizer(evictedMessages, existingSummary)`. Store the returned string as the new summary. | Status: not_done
+- [x] **Implement summarization trigger** — Check pending buffer against `summarizeThresholdTokens` and `summarizeThresholdMessages`. Trigger summarization when either threshold is exceeded (whichever is reached first). | Status: done
+- [x] **Implement incremental strategy** — Pass only newly evicted messages and the existing summary to the summarizer: `summarizer(evictedMessages, existingSummary)`. Store the returned string as the new summary. | Status: done
 - [ ] **Implement rolling strategy** — If existing summary exists, prepend it as a synthetic user message (`{ role: 'user', content: 'Previous summary: ...' }`) to the evicted messages. Call `summarizer(combinedMessages)` without passing `existingSummary`. Replace the summary with the result. | Status: not_done
 - [ ] **Implement anchored strategy** — Maintain separate `anchor` and `rollingSection`. Summarize only the rolling section plus new messages (exclude anchor from re-summarization). Final summary is `anchor + rollingSection`. | Status: not_done
 - [ ] **Implement setAnchor()** — Allow caller to set/replace anchor text for the anchored strategy. Validate anchor token count against `maxAnchorTokens`. | Status: not_done
 - [ ] **Implement auto-anchor extraction** — When strategy is `'anchored'` and no anchor is set, extract the anchor from the first summarization output. Use the first portion of the summary (up to `maxAnchorTokens`) as the anchor. | Status: not_done
 - [ ] **Implement summary compression** — When summary exceeds `maxSummaryTokens`, re-summarize targeting `maxSummaryTokens * 0.75`. Track compression rounds. If `maxSummaryRounds` is reached, truncate the oldest portion of the summary at a sentence boundary instead of re-summarizing. Fire `onSummaryCompressed` hook on each compression attempt. | Status: not_done
-- [ ] **Implement summarizer failure handling** — Catch errors thrown by the summarizer. Do not re-throw (summarization failure must not crash the conversation). Keep evicted messages in the pending buffer for the next attempt. If pending buffer grows beyond budget, apply emergency truncation. Handle empty string returns as failures. | Status: not_done
+- [x] **Implement summarizer failure handling** — Catch errors thrown by the summarizer. Do not re-throw (summarization failure must not crash the conversation). Keep evicted messages in the pending buffer for the next attempt. If pending buffer grows beyond budget, apply emergency truncation. Handle empty string returns as failures. | Status: done
 - [ ] **Integrate summarization into getMessages()** — When `getMessages()` is called and the pending buffer exceeds the trigger threshold, invoke summarization before assembling the output. Measure duration for the `onSummarize` hook. | Status: not_done
-- [ ] **Summary message injection** — Insert the summary as a message (using configured `summaryRole`) after the system prompt and before recent messages. Omit if no summary exists. | Status: not_done
+- [x] **Summary message injection** — Insert the summary as a message (using configured `summaryRole`) after the system prompt and before recent messages. Omit if no summary exists. | Status: done
 - [ ] **Tests: incremental strategy** — Create `src/__tests__/summarization/incremental.test.ts`. Test: summarizer receives correct arguments (evicted messages + existing summary); summary is updated correctly; multiple rounds of incremental summarization produce correct results. | Status: not_done
 - [ ] **Tests: rolling strategy** — Create `src/__tests__/summarization/rolling.test.ts`. Test: existing summary is prepended as synthetic message; summarizer receives combined messages without existingSummary param; summary is replaced fully. | Status: not_done
 - [ ] **Tests: anchored strategy** — Create `src/__tests__/summarization/anchored.test.ts`. Test: anchor is preserved across summarizations; rolling section is re-summarized; auto-anchor extraction from first summary; setAnchor() replaces existing anchor; anchor token budget is respected. | Status: not_done
@@ -126,45 +126,45 @@ Comprehensive task list derived from SPEC.md. All tasks must be completed before
 
 ## Phase 10: Serialization and Deserialization (`src/serialization.ts`)
 
-- [ ] **Implement serialize()** — Export full context state as a `ContextState` object: all messages, summary, anchor, pending buffer, summary rounds, token counts, and non-function configuration values. The result must be JSON-safe (`JSON.stringify` compatible). Do not include `summarizer`, `tokenCounter`, or `hooks`. | Status: not_done
-- [ ] **Implement deserialize()** — Accept a `ContextState` and optional `{ summarizer, tokenCounter, hooks }`. Reconstruct a `SlidingContext` instance with the restored state. Validate `version` field; throw `TypeError` for unsupported versions. If no summarizer is provided, operate in truncation mode. | Status: not_done
-- [ ] **Version field handling** — Serialize with `version: 1`. On deserialization, check the version. If version is `1`, load directly. If version is unrecognized, throw `TypeError` with clear message (e.g., `"Unsupported context state version: 2"`). | Status: not_done
-- [ ] **Tests: serialization** — Create `src/__tests__/persistence/serialize.test.ts`. Test: serialize empty context; serialize context with messages; serialize context with summary; serialize context with pending buffer; serialize context with anchor; verify output is JSON-safe; verify functions are excluded. | Status: not_done
-- [ ] **Tests: deserialization** — Create `src/__tests__/persistence/deserialize.test.ts`. Test: deserialize and verify `getMessages()` matches pre-serialization output; deserialize without summarizer (truncation mode); deserialize with re-attached functions; add messages after deserialization and verify correct behavior; reject unknown version with TypeError. | Status: not_done
-- [ ] **Tests: round-trip persistence** — Test full round-trip: create context, add messages, trigger summarization, serialize, deserialize with functions, continue conversation, verify coherent state. | Status: not_done
+- [x] **Implement serialize()** — Export full context state as a `ContextState` object: all messages, summary, anchor, pending buffer, summary rounds, token counts, and non-function configuration values. The result must be JSON-safe (`JSON.stringify` compatible). Do not include `summarizer`, `tokenCounter`, or `hooks`. | Status: done
+- [x] **Implement deserialize()** — Accept a `ContextState` and optional `{ summarizer, tokenCounter, hooks }`. Reconstruct a `SlidingContext` instance with the restored state. Validate `version` field; throw `TypeError` for unsupported versions. If no summarizer is provided, operate in truncation mode. | Status: done
+- [x] **Version field handling** — Serialize with `version: 1`. On deserialization, check the version. If version is `1`, load directly. If version is unrecognized, throw `TypeError` with clear message (e.g., `"Unsupported context state version: 2"`). | Status: done
+- [x] **Tests: serialization** — Create `src/__tests__/persistence/serialize.test.ts`. Test: serialize empty context; serialize context with messages; serialize context with summary; serialize context with pending buffer; serialize context with anchor; verify output is JSON-safe; verify functions are excluded. | Status: done
+- [x] **Tests: deserialization** — Create `src/__tests__/persistence/deserialize.test.ts`. Test: deserialize and verify `getMessages()` matches pre-serialization output; deserialize without summarizer (truncation mode); deserialize with re-attached functions; add messages after deserialization and verify correct behavior; reject unknown version with TypeError. | Status: done
+- [x] **Tests: round-trip persistence** — Test full round-trip: create context, add messages, trigger summarization, serialize, deserialize with functions, continue conversation, verify coherent state. | Status: done
 
 ---
 
 ## Phase 11: Event Hooks (`src/context.ts` — hooks integration)
 
-- [ ] **Implement onEvict hook** — Fire when messages are evicted from the recent zone. Pass the evicted messages and the reason (`'budget'` for normal eviction, `'truncation'` for emergency drops). | Status: not_done
-- [ ] **Implement onSummarize hook** — Fire after the summarizer completes. Pass `inputMessages`, `existingSummary` (or null), `newSummary`, and `durationMs` (elapsed time of the summarizer call). | Status: not_done
-- [ ] **Implement onBudgetExceeded hook** — Fire when total token count exceeds the budget, before eviction begins. Pass `totalTokens` and `budget`. | Status: not_done
-- [ ] **Implement onSummaryCompressed hook** — Fire when the summary is re-summarized because it exceeded `maxSummaryTokens`. Pass `oldSummary` and `newSummary`. | Status: not_done
-- [ ] **Tests: event hooks** — Create `src/__tests__/hooks/event-hooks.test.ts`. Test: each hook fires at the correct time with correct arguments; hooks are optional (no error if not provided); hooks that throw do not crash the context manager; multiple hooks fire in expected order during a single `getMessages()` call. | Status: not_done
+- [x] **Implement onEvict hook** — Fire when messages are evicted from the recent zone. Pass the evicted messages and the reason (`'budget'` for normal eviction, `'truncation'` for emergency drops). | Status: done
+- [x] **Implement onSummarize hook** — Fire after the summarizer completes. Pass `inputMessages`, `existingSummary` (or null), `newSummary`, and `durationMs` (elapsed time of the summarizer call). | Status: done
+- [x] **Implement onBudgetExceeded hook** — Fire when total token count exceeds the budget, before eviction begins. Pass `totalTokens` and `budget`. | Status: done
+- [x] **Implement onSummaryCompressed hook** — Fire when the summary is re-summarized because it exceeded `maxSummaryTokens`. Pass `oldSummary` and `newSummary`. | Status: done
+- [x] **Tests: event hooks** — Create `src/__tests__/hooks/event-hooks.test.ts`. Test: each hook fires at the correct time with correct arguments; hooks are optional (no error if not provided); hooks that throw do not crash the context manager; multiple hooks fire in expected order during a single `getMessages()` call. | Status: done
 
 ---
 
 ## Phase 12: Dynamic Budget Changes
 
-- [ ] **Implement setTokenBudget()** — Accept a new `tokenBudget` value. If the current total exceeds the new budget, trigger eviction immediately. If eviction produces a pending buffer exceeding the threshold, trigger summarization. Method is async because it may invoke the summarizer. Validate the new budget (positive integer). | Status: not_done
-- [ ] **Tests: budget change** — Create `src/__tests__/budget/budget-change.test.ts`. Test: reducing budget triggers eviction; reducing budget triggers summarization if threshold met; increasing budget does not trigger eviction; invalid budget throws TypeError; budget change mid-conversation produces correct `getMessages()` output. | Status: not_done
+- [x] **Implement setTokenBudget()** — Accept a new `tokenBudget` value. If the current total exceeds the new budget, trigger eviction immediately. If eviction produces a pending buffer exceeding the threshold, trigger summarization. Method is async because it may invoke the summarizer. Validate the new budget (positive integer). | Status: done
+- [x] **Tests: budget change** — Create `src/__tests__/budget/budget-change.test.ts`. Test: reducing budget triggers eviction; reducing budget triggers summarization if threshold met; increasing budget does not trigger eviction; invalid budget throws TypeError; budget change mid-conversation produces correct `getMessages()` output. | Status: done
 
 ---
 
 ## Phase 13: Multi-Part Message Support
 
-- [ ] **Handle array content in messages** — When `message.content` is an array of parts (text blocks, image blocks, etc.), count tokens for text parts using `tokenCounter` and add flat `imageTokenCost` (default 85) for each non-text part. | Status: not_done
-- [ ] **Pass full message to summarizer** — When multi-part messages are evicted and summarized, pass the full message object to the summarizer. The caller's summarizer function decides how to handle non-text content. | Status: not_done
+- [x] **Handle array content in messages** — When `message.content` is an array of parts (text blocks, image blocks, etc.), count tokens for text parts using `tokenCounter` and add flat `imageTokenCost` (default 85) for each non-text part. | Status: done
+- [x] **Pass full message to summarizer** — When multi-part messages are evicted and summarized, pass the full message object to the summarizer. The caller's summarizer function decides how to handle non-text content. | Status: done
 
 ---
 
 ## Phase 14: Public API Exports (`src/index.ts`)
 
-- [ ] **Export createContext** — Re-export the `createContext` factory function from `src/context.ts`. | Status: not_done
-- [ ] **Export deserialize** — Re-export the `deserialize` function from `src/serialization.ts`. | Status: not_done
-- [ ] **Export defaultSummarizationPrompt** — Re-export the prompt constant from `src/prompt.ts`. | Status: not_done
-- [ ] **Export all types** — Re-export all public TypeScript types: `Message`, `ToolCall`, `TokenCounter`, `Summarizer`, `SummarizationStrategy`, `SummaryRole`, `EventHooks`, `SlidingContextOptions`, `ContextState`, `SlidingContext`. | Status: not_done
+- [x] **Export createContext** — Re-export the `createContext` factory function from `src/context.ts`. | Status: done
+- [x] **Export deserialize** — Re-export the `deserialize` function from `src/serialization.ts`. | Status: done
+- [x] **Export defaultSummarizationPrompt** — Re-export the prompt constant from `src/prompt.ts`. | Status: done
+- [x] **Export all types** — Re-export all public TypeScript types: `Message`, `ToolCall`, `TokenCounter`, `Summarizer`, `SummarizationStrategy`, `SummaryRole`, `EventHooks`, `SlidingContextOptions`, `ContextState`, `SlidingContext`. | Status: done
 
 ---
 
