@@ -3,6 +3,7 @@
 Provider-agnostic sliding window context manager for LLMs. Keeps your conversation within a token budget by evicting old messages, summarizing context, and preserving tool call atomicity.
 
 [![npm version](https://img.shields.io/npm/v/sliding-context.svg)](https://www.npmjs.com/package/sliding-context)
+[![npm downloads](https://img.shields.io/npm/dt/sliding-context.svg)](https://www.npmjs.com/package/sliding-context)
 [![license](https://img.shields.io/npm/l/sliding-context.svg)](https://github.com/SiluPanda/sliding-context/blob/master/LICENSE)
 [![node](https://img.shields.io/node/v/sliding-context.svg)](https://www.npmjs.com/package/sliding-context)
 [![zero dependencies](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](https://www.npmjs.com/package/sliding-context)
