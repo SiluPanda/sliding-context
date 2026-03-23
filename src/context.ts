@@ -124,10 +124,6 @@ function createWithState(
       );
     }
 
-    if (existingSummary !== undefined && options.hooks?.onSummaryCompressed) {
-      options.hooks.onSummaryCompressed(existingSummary, newSummary);
-    }
-
     currentSummary = newSummary;
     pendingBuffer = [];
   }
@@ -236,14 +232,14 @@ function createWithState(
     anchorMessages = messages.slice();
   }
 
-  function setTokenBudget(budget: number): void {
+  async function setTokenBudget(budget: number): Promise<void> {
     if (!Number.isFinite(budget) || budget < 100) {
       throw new RangeError(
         `sliding-context: tokenBudget must be a finite number >= 100, got ${budget}`,
       );
     }
     tokenBudget = budget;
-    void enforceBudget();
+    await enforceBudget();
   }
 
   function clear(): void {

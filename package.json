@@ -1,6 +1,6 @@
 {
   "name": "sliding-context",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Provider-agnostic sliding window context manager for LLMs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -352,19 +352,42 @@ describe('serialize / deserialize roundtrip', () => {
 // ---------------------------------------------------------------------------
 
 describe('setTokenBudget', () => {
-  it('throws for budget < 100', () => {
+  it('throws for budget < 100', async () => {
     const ctx = makeCtx();
-    expect(() => ctx.setTokenBudget(50)).toThrow(RangeError);
+    await expect(ctx.setTokenBudget(50)).rejects.toThrow(RangeError);
   });
 
-  it('throws for non-finite budget', () => {
+  it('throws for non-finite budget', async () => {
     const ctx = makeCtx();
-    expect(() => ctx.setTokenBudget(Infinity)).toThrow(RangeError);
+    await expect(ctx.setTokenBudget(Infinity)).rejects.toThrow(RangeError);
   });
 
-  it('accepts valid budget', () => {
+  it('accepts valid budget and returns a promise', async () => {
     const ctx = makeCtx();
-    expect(() => ctx.setTokenBudget(500)).not.toThrow();
+    const result = ctx.setTokenBudget(500);
+    expect(result).toBeInstanceOf(Promise);
+    await result;
+  });
+
+  it('awaits budget enforcement including summarization', async () => {
+    const summarizer = vi.fn().mockResolvedValue('Budget summary');
+    const ctx = makeCtx({
+      tokenBudget: 2000,
+      summarizer,
+      summarizeThresholdMessages: 2,
+    });
+
+    // Add messages at large budget
+    for (let i = 0; i < 6; i++) {
+      await ctx.addMessage(msg(i % 2 === 0 ? 'user' : 'assistant', 'a'.repeat(200)));
+    }
+
+    // Reduce budget — should trigger eviction and possibly summarization
+    await ctx.setTokenBudget(300);
+
+    // After awaiting, any summarization triggered by the budget change is complete
+    // (previously the promise was dropped with `void enforceBudget()`)
+    expect(ctx.getTokenCount()).toBeLessThanOrEqual(400);
   });
 });
 
