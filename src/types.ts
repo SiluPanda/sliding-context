@@ -65,7 +65,7 @@ export interface SlidingContext {
   getRecentMessageCount(): number;
   getTotalMessageCount(): number;
   setAnchor(messages: Message[]): void;
-  setTokenBudget(budget: number): void;
+  setTokenBudget(budget: number): Promise<void>;
   clear(): void;
   serialize(): ContextState;
 }
